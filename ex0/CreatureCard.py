@@ -1,5 +1,5 @@
 from typing import Any, Dict, Union
-from ex0.Card import Card
+from .Card import Card
 
 
 class CreatureCard(Card):
