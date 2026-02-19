@@ -78,7 +78,7 @@ class Card(ABC):
             "The rarity should be one of these "
             f"{[r for r in self.valid_rarities if r != "Hamid"]}"
         )
-        if clean_rarity == "Hamid" and self.__cost != "Hamid":
+        if clean_rarity == "Hamid" and self.__rarity != "Hamid":
             print(
                 f"\n{'-' * 60}\nCongratulations, "
                 f"you now own the rarest card in history.\n{'-' * 60}\n"
