@@ -54,7 +54,7 @@ class Card(ABC):
             raise TypeError("Rarity must be a string")
         clean_rarity = rarity.strip().capitalize()
         if clean_rarity not in self.valid_rarities:
-            raise ValueError(f"Invalid rarity: {clean_rarity}")
+            raise ValueError(f"Invalid rarity: '{clean_rarity}'")
 
         self.__rarity = clean_rarity
         if self.__rarity == "Hamid":
