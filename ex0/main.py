@@ -22,7 +22,7 @@ def main() -> None:
         print(f"Playable: {dragon.is_playable(game_state['mana'])}")
         print(f"Play result: {dragon.play(game_state)}")
     except KeyError as e:
-        print(f"Error: {e}")
+        print(f"Error: {e} Not found")
     except Exception as e:
         print(f"Unexpected Error: {e}")
 
@@ -44,7 +44,7 @@ def main() -> None:
 if __name__ == "__main__":
     try:
         main()
-    except AssertionError as e:
-        print(f"Error: {e}")
+    except (TypeError, ValueError) as e:
+        print(f"Instance Error: {e}")
     except Exception as e:
         print(f"Unexpected Error: {e}")

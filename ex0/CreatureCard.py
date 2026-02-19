@@ -1,68 +1,45 @@
 from typing import Any, Dict, Union
-from .Card import Card
+from ex0.Card import Card
 
 
 class CreatureCard(Card):
-    """Concrete implementation of a creature card.
-
-    Attributes:
-        attack: The damage the creature deals.
-        health: The life points of the creature.
-    """
+    """Concrete implementation of a creature card."""
 
     def __init__(
         self,
         name: str, cost: int, rarity: str, attack: int, health: int
     ) -> None:
         super().__init__(name, cost, rarity)
-
-        assert isinstance(attack, int), "Attack must be an integer"
-        assert attack >= 0, "Attack must be positive"
-        self.__attack: Union[int, float] = (
-            attack if self.rarity != "Hamid" else float('inf')
-        )
-
-        assert isinstance(health, int), "Health must be an integer"
-        assert health >= 0, "Health must be positive"
-        self.__health: Union[int, float] = (
-            health if self.rarity != "Hamid" else float('inf')
-        )
+        self.__attack: Union[int, float] = 0
+        self.__health: Union[int, float] = 0
+        self.attack = attack
+        self.health = health
 
     @property
-    def attack(self) -> int:
+    def attack(self) -> Union[int, float]:
         return self.__attack
 
     @attack.setter
-    def attack(self, attack) -> int:
-
-        assert isinstance(attack, int), "Attack must be an integer"
-        assert attack >= 0, "Attack must be positive"
-        self.__attack: Union[int, float] = (
-            attack if self.rarity != "Hamid" else float('inf')
-        )
+    def attack(self, value: int) -> None:
+        if not isinstance(value, int) or value < 0:
+            raise ValueError("Attack must be a positive integer")
+        self.__attack = float('inf') if self.rarity == "Hamid" else value
 
     @property
-    def health(self) -> int:
+    def health(self) -> Union[int, float]:
         return self.__health
 
     @health.setter
-    def health(self, health) -> int:
-        assert isinstance(health, int), "Health must be an integer"
-        assert health >= 0, "Health must be positive"
-        self.__health: Union[int, float] = (
-            health if self.rarity != "Hamid" else float('inf')
-        )
+    def health(self, value: int) -> None:
+        if not isinstance(value, int) or value < 0:
+            raise ValueError("Health must be a positive integer")
+        self.__health = float('inf') if self.rarity == "Hamid" else value
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
-        if 'effect' not in game_state:
-            raise KeyError(
-                "The Creature Card object for the game state "
-                "does not contain an 'Effect' key in the game interface."
-            )
         return {
             "card_played": self.name,
             "mana_used": self.cost,
-            "effect": game_state['effect']
+            "effect": game_state.get('effect', 'Summoned')
         }
 
     def attack_target(self, target: str) -> Dict[str, Any]:
