@@ -18,7 +18,7 @@ class Card(ABC):
         self.rarity = rarity
         self.cost = cost
 
-        if self.__cost == "Hamid":
+        if self.__rarity == "Hamid":
             print(
                 f"\n{'-' * 60}\nCongratulations, "
                 f"you now own the rarest card in history.\n{'-' * 60}\n"
