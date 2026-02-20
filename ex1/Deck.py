@@ -26,7 +26,8 @@ class Deck:
         return False
 
     def shuffle(self) -> None:
-        random.shuffle(self.__cards)
+        if len(self.__cards) > 1:
+            random.shuffle(self.__cards)
 
     def draw_card(self) -> Card:
         if not self.__cards:
