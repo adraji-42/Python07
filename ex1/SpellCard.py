@@ -23,22 +23,19 @@ class SpellCard(Card):
         self.__effect_type = value.strip().capitalize()
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
-        available_mana = game_state.get("mana", 0)
-        if not self.is_playable(available_mana):
-            raise ValueError(f"Not enough mana to cast {self.name}")
+        mana: int = game_state.get("mana", 0)
+        can_play: bool = self.is_playable(mana)
 
-        targets = game_state.get("targets", [])
         return {
-            "card_played": self.name,
-            "type": "Spell",
-            "effect_type": self.__effect_type,
-            "mana_remaining": available_mana - self.cost,
-            "targets_hit": len(targets) if isinstance(targets, list) else 0
+            "card": self.name,
+            "playable": can_play,
+            "mana_after": mana - self.cost if can_play else mana,
+            "effect_to_resolve": self.__effect_type
         }
 
     def resolve_effect(self, targets: List[str]) -> Dict[str, Any]:
         return {
             "effect": self.__effect_type,
-            "targets_affected": targets,
+            "targets": targets,
             "resolved": True
         }

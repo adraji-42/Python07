@@ -32,23 +32,22 @@ class ArtifactCard(Card):
     def effect(self, value: str) -> None:
         if not isinstance(value, str) or not value.strip():
             raise ValueError("Effect must be a non-empty string")
-        self.__effect = value.strip().capitalize()
+        self.__effect = value
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
-        current_artifacts = game_state.get("artifacts_on_field", 0)
+        slots: int = game_state.get("artifact_slots", 0)
         return {
-            "card_played": self.name,
-            "type": "Artifact",
+            "card": self.name,
+            "status": "equipped" if slots > 0 else "no_slots",
             "durability": self.__durability,
-            "field_slot": current_artifacts + 1,
-            "action": "Artifact equipped"
+            "effect_active": self.__effect
         }
 
     def activate_ability(self) -> Dict[str, Any]:
         if self.__durability <= 0:
-            return {"error": "Artifact is broken"}
+            return {"status": "broken"}
         self.__durability -= 1
         return {
-            "activated": self.__effect,
+            "ability": self.__effect,
             "remaining_durability": self.__durability
         }
