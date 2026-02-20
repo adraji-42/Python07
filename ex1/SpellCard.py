@@ -1,5 +1,5 @@
+from ex0 import Card
 from typing import Any, Dict, List
-from ex0.Card import Card
 
 
 class SpellCard(Card):
@@ -23,11 +23,17 @@ class SpellCard(Card):
         self.__effect_type = value.strip().capitalize()
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+        available_mana = game_state.get("mana", 0)
+        if not self.is_playable(available_mana):
+            raise ValueError(f"Not enough mana to cast {self.name}")
+
+        targets = game_state.get("targets", [])
         return {
             "card_played": self.name,
             "type": "Spell",
             "effect_type": self.__effect_type,
-            "status": "Success"
+            "mana_remaining": available_mana - self.cost,
+            "targets_hit": len(targets) if isinstance(targets, list) else 0
         }
 
     def resolve_effect(self, targets: List[str]) -> Dict[str, Any]:

@@ -1,5 +1,5 @@
+from ex0 import Card
 from typing import Any, Dict
-from ex0.Card import Card
 
 
 class ArtifactCard(Card):
@@ -35,13 +35,19 @@ class ArtifactCard(Card):
         self.__effect = value.strip().capitalize()
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+        current_artifacts = game_state.get("artifacts_on_field", 0)
         return {
             "card_played": self.name,
             "type": "Artifact",
-            "durability": self.__durability
+            "durability": self.__durability,
+            "field_slot": current_artifacts + 1,
+            "action": "Artifact equipped"
         }
 
     def activate_ability(self) -> Dict[str, Any]:
+        if self.__durability <= 0:
+            return {"error": "Artifact is broken"}
+        self.__durability -= 1
         return {
             "activated": self.__effect,
             "remaining_durability": self.__durability
