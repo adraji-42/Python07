@@ -6,7 +6,7 @@ class Card(ABC):
     """Abstract Base Class for all cards in DataDeck."""
 
     valid_rarities: List[str] = [
-        "Common", "Uncommon", "Rare", "Legendary", "Mythic", "Hamid"
+        "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Hamid"
     ]
 
     def __init__(self, name: str, cost: int, rarity: str) -> None:
@@ -32,7 +32,7 @@ class Card(ABC):
     def name(self, name: str) -> None:
         if not isinstance(name, str) or not name.strip():
             raise ValueError("Name must be a non-empty string")
-        self.__name = name.strip().capitalize()
+        self.__name = name.strip()
 
     @property
     def cost(self) -> int:

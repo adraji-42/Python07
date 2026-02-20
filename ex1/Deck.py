@@ -1,6 +1,8 @@
 import random
+from .SpellCard import SpellCard
+from ex0 import Card, CreatureCard
 from typing import List, Dict, Any
-from ex0.Card import Card
+from .ArtifactCard import ArtifactCard
 
 
 class Deck:
@@ -32,11 +34,19 @@ class Deck:
         return self.__cards.pop()
 
     def get_deck_stats(self) -> Dict[str, Any]:
-        rarities: Dict[str, int] = {}
-        for card in self.__cards:
-            rarities[card.rarity] = rarities.get(card.rarity, 0) + 1
 
         return {
-            "total_cards": len(self.__cards),
-            "rarity_distribution": rarities
+            'total_cards': len(self.__cards),
+            'creatures': len(
+                [c for c in self.__cards if isinstance(c, CreatureCard)]
+            ),
+            'spells': len(
+                [c for c in self.__cards if isinstance(c, SpellCard)]
+            ),
+            'artifacts': len(
+                [c for c in self.__cards if isinstance(c, ArtifactCard)]
+            ),
+            'avg_cost': round(
+                sum([c.cost for c in self.__cards]) / len(self.__cards), 1
+            )
         }

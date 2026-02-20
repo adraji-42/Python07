@@ -36,11 +36,14 @@ class ArtifactCard(Card):
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
         slots: int = game_state.get("artifact_slots", 0)
+        mana: int = game_state.get("mana", 0)
+        effect: int = game_state.get("effect", "None")
+        can_play: bool = (self.is_playable(mana) and slots > 0)
+
         return {
-            "card": self.name,
-            "status": "equipped" if slots > 0 else "no_slots",
-            "durability": self.__durability,
-            "effect_active": self.__effect
+            "card_played": self.name,
+            "mana_used": self.cost if can_play else 0,
+            "effect": effect
         }
 
     def activate_ability(self) -> Dict[str, Any]:

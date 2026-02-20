@@ -24,13 +24,13 @@ class SpellCard(Card):
 
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
         mana: int = game_state.get("mana", 0)
+        effect: int = game_state.get("effect", "None")
         can_play: bool = self.is_playable(mana)
 
         return {
-            "card": self.name,
-            "playable": can_play,
-            "mana_after": mana - self.cost if can_play else mana,
-            "effect_to_resolve": self.__effect_type
+            "card_played": self.name,
+            "mana_used": self.cost if can_play else 0,
+            "effect": effect
         }
 
     def resolve_effect(self, targets: List[str]) -> Dict[str, Any]:

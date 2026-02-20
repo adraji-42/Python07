@@ -39,7 +39,7 @@ class CreatureCard(Card):
         return {
             "card_played": self.name,
             "mana_used": self.cost,
-            "effect": game_state.get('effect', 'Summoned')
+            "effect": game_state.get('effect', 'Creature summoned')
         }
 
     def attack_target(self, target: str) -> Dict[str, Any]:
