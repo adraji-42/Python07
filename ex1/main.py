@@ -50,4 +50,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (TypeError, ValueError) as e:
+        print(f"Instance Error: {e}")
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
