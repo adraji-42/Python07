@@ -27,12 +27,20 @@ def main() -> None:
     print("\nEliteCard capabilities:")
     for c, m in get_mro_functions(EliteCard).items():
         if c != "EliteCard" and m:
-            print(f"- {c}:", [e[0] for e in m if e[0][0] != '_'], sep='')
+            print(f"- {c}: {[e[0] for e in m if e[0][0] != '_']}")
+
+    card = EliteCard("Arcane Warrior", 4, "Mythic", 5, 9)
 
     print("\nPlaying Arcane Warrior (Elite Card):")
 
     print("\nCombat phase:")
-    
+    print(f"Attack result: {card.attack('Enemy')}")
+    print(f"Defense result: {card.defend(5)}")
+
+    print("\nMagic phase:")
+    print(f"Spell cast: {card.cast_spell("Fireball", ['Enemy1', 'Enemy2'])}")
+    print(f"{card.channel_mana(3)}")
 
 
-main()
+if __name__ == "__main__":
+    main()

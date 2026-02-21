@@ -1,28 +1,153 @@
-from ex0 import Card
-from .Magical import Magical
-from typing import Dict, List
+from typing import Any, Dict, List
+from ex0.Card import Card
 from .Combatable import Combatable
+from .Magical import Magical
 
 
-class EliteCard (Card, Combatable, Magical):
+class EliteCard(Card, Combatable, Magical):
+    """EliteCard with defense_power acting as a protection layer."""
 
-    def play(self, game_state: Dict) -> Dict:
-        pass
+    def __init__(
+        self, name: str, cost: int, rarity: str,
+        attack_power: int, defense_power: int
+    ) -> None:
+        """Initializes EliteCard with combat and magic capabilities.
 
-    def attack(self, target) -> Dict:
-        pass
+        Args:
+            name: The name of the card.
+            cost: The mana cost of the card.
+            rarity: The rarity level of the card.
+            attack_power: The physical damage strength.
+            defense_power: The defensive capability of the card.
+        """
+        super().__init__(name, cost, rarity)
+        self.__attack_power: int = 0
+        self.__defense_power: int = 0
 
-    def cast_spell(self, spell_name: str, targets: List) -> Dict:
-        pass
+        self.attack_power = attack_power
+        self.defense_power = defense_power
 
-    def defend(self, incoming_damage: int) -> Dict:
-        pass
+    @property
+    def attack_power(self) -> int:
+        """Gets the attack power."""
+        return self.__attack_power
 
-    def get_combat_stats(self) -> Dict:
-        pass
+    @attack_power.setter
+    def attack_power(self, value: int) -> None:
+        """Sets the attack power."""
+        if not isinstance(value, int) or value < 0:
+            raise ValueError("Attack power must be a non-negative integer")
+        self.__attack_power = value
 
-    def channel_mana(self, amount: int) -> Dict:
-        pass
+    @property
+    def defense_power(self) -> int:
+        """Gets the defense power."""
+        return self.__defense_power
 
-    def get_magic_stats(self) -> Dict:
-        pass
+    @defense_power.setter
+    def defense_power(self, value: int) -> None:
+        """Sets the defense power."""
+        if not isinstance(value, int) or value < 0:
+            raise ValueError("Defense power must be a non-negative integer")
+        self.__defense_power = value
+
+    def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+        """Plays the card using game_state data.
+
+        Args:
+            game_state: Current state of the game.
+
+        Returns:
+            Dictionary with deployment results.
+        """
+        player_mana = int(game_state.get("mana", 0))
+        is_allowed = self.is_playable(player_mana)
+
+        return {
+            "card": self.name,
+            "status": "deployed" if is_allowed else "failed",
+            "mana_cost": self.cost,
+            "current_defense": self.__defense_power
+        }
+
+    def attack(self, target: Any) -> Dict[str, Any]:
+        """Executes attack action.
+
+        Args:
+            target: The target of the attack.
+
+        Returns:
+            Dictionary with attack stats.
+        """
+        return {
+            "attacker": self.name,
+            "target": str(target),
+            "damage": self.__attack_power,
+            "type": "melee"
+        }
+
+    def defend(self, incoming_damage: int) -> Dict[str, Any]:
+        """Uses defense_power to block incoming damage.
+
+        Args:
+            incoming_damage: Damage value to process.
+
+        Returns:
+            Dictionary showing damage absorbed by defense_power.
+        """
+        blocked = min(self.__defense_power, incoming_damage)
+        self.__defense_power -= blocked
+        taken = incoming_damage - blocked
+
+        return {
+            "defender": self.name,
+            "damage_blocked": blocked,
+            "damage_taken": taken,
+            "remaining_defense": self.__defense_power
+        }
+
+    def get_combat_stats(self) -> Dict[str, Any]:
+        """Returns combat related stats."""
+        return {
+            "attack": self.__attack_power,
+            "defense": self.__defense_power
+        }
+
+    def cast_spell(
+        self, spell_name: str, targets: List[Any]
+    ) -> Dict[str, Any]:
+        """Casts a spell from the card.
+
+        Args:
+            spell_name: Name of the spell.
+            targets: List of targets.
+
+        Returns:
+            Dictionary with spell results.
+        """
+        return {
+            "caster": self.name,
+            "spell": spell_name,
+            "targets": [str(t) for t in targets],
+            "action": "magic_cast"
+        }
+
+    def channel_mana(self, amount: int) -> Dict[str, Any]:
+        """Increases defense_power (channeling).
+
+        Args:
+            amount: Amount to increase defense by.
+
+        Returns:
+            Dictionary with updated defense status.
+        """
+        self.__defense_power += amount
+        return {
+            "action": "channeling",
+            "added_defense": amount,
+            "total_defense": self.__defense_power
+        }
+
+    def get_magic_stats(self) -> Dict[str, Any]:
+        """Returns magic related stats."""
+        return {"current_energy": self.__defense_power}
