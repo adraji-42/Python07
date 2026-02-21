@@ -1,5 +1,5 @@
-from typing import Any, Dict, Union
 from .Card import Card
+from typing import Dict, Union
 
 
 class CreatureCard(Card):
@@ -35,14 +35,16 @@ class CreatureCard(Card):
             raise ValueError("Health must be a positive integer")
         self.__health = float('inf') if self.rarity == "Hamid" else value
 
-    def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+    def play(self, game_state: Dict[str, str]) -> Dict[str, Union[str, int]]:
         return {
             "card_played": self.name,
             "mana_used": self.cost,
             "effect": game_state.get('effect', 'Creature summoned')
         }
 
-    def attack_target(self, target: str) -> Dict[str, Any]:
+    def attack_target(
+        self, target: str
+    ) -> Dict[str, Union[str, int, float, bool]]:
         return {
             "attacker": self.name,
             "target": target,
@@ -50,7 +52,7 @@ class CreatureCard(Card):
             "combat_resolved": True
         }
 
-    def get_card_info(self) -> Dict[str, Any]:
+    def get_card_info(self) -> Dict[str, Union[str, float, int]]:
         info = super().get_card_info()
         info.update({
             "type": "Creature",

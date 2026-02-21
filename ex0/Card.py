@@ -1,5 +1,5 @@
-from typing import Any, Dict, List
 from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Union
 
 
 class Card(ABC):
@@ -64,7 +64,7 @@ class Card(ABC):
     def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
         pass
 
-    def get_card_info(self) -> Dict[str, Any]:
+    def get_card_info(self) -> Dict[str, Union[str, int]]:
         return {
             "name": self.__name,
             "cost": self.__cost,

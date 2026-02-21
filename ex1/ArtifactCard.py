@@ -1,5 +1,5 @@
 from ex0 import Card
-from typing import Any, Dict
+from typing import Dict, Union
 
 
 class ArtifactCard(Card):
@@ -34,7 +34,9 @@ class ArtifactCard(Card):
             raise ValueError("Effect must be a non-empty string")
         self.__effect = value
 
-    def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+    def play(
+        self, game_state: Dict[str, Union[str, int]]
+    ) -> Dict[str, Union[str, int]]:
         slots: int = game_state.get("artifact_slots", 0)
         mana: int = game_state.get("mana", 0)
         effect: int = game_state.get("effect", "None")
@@ -46,7 +48,7 @@ class ArtifactCard(Card):
             "effect": effect
         }
 
-    def activate_ability(self) -> Dict[str, Any]:
+    def activate_ability(self) -> Dict[str, Union[str, int]]:
         if self.__durability <= 0:
             return {"status": "broken"}
         self.__durability -= 1

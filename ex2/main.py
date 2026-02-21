@@ -25,9 +25,12 @@ def main() -> None:
     print("\n=== DataDeck Ability System ===")
 
     print("\nEliteCard capabilities:")
-    for c, m in get_mro_functions(EliteCard).items():
-        if c != "EliteCard" and m:
-            print(f"- {c}: {[e[0] for e in m if e[0][0] != '_']}")
+    try:
+        for c, m in get_mro_functions(EliteCard).items():
+            if c != "EliteCard" and m:
+                print(f"- {c}: {[e[0] for e in m if e[0][0] != '_']}")
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
 
     card = EliteCard("Arcane Warrior", 4, "Mythic", 5, 9)
 

@@ -1,7 +1,7 @@
 import random
 from .SpellCard import SpellCard
 from ex0 import Card, CreatureCard
-from typing import List, Dict, Any
+from typing import List, Dict, Union
 from .ArtifactCard import ArtifactCard
 
 
@@ -34,7 +34,7 @@ class Deck:
             raise IndexError("Deck is empty")
         return self.__cards.pop()
 
-    def get_deck_stats(self) -> Dict[str, Any]:
+    def get_deck_stats(self) -> Dict[str, Union[int, float]]:
 
         return {
             'total_cards': len(self.__cards),

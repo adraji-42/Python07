@@ -1,7 +1,7 @@
-from typing import Any, Dict, List
 from ex0.Card import Card
-from .Combatable import Combatable
 from .Magical import Magical
+from .Combatable import Combatable
+from typing import Dict, List, Union
 
 
 class EliteCard(Card, Combatable, Magical):
@@ -51,7 +51,7 @@ class EliteCard(Card, Combatable, Magical):
             raise ValueError("Defense power must be a non-negative integer")
         self.__defense_power = value
 
-    def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+    def play(self, game_state: Dict[str, int]) -> Dict[str, Union[str, int]]:
         """Plays the card using game_state data.
 
         Args:
@@ -70,7 +70,7 @@ class EliteCard(Card, Combatable, Magical):
             "current_defense": self.__defense_power
         }
 
-    def attack(self, target: Any) -> Dict[str, Any]:
+    def attack(self, target: str) -> Dict[str, Union[str, int]]:
         """Executes attack action.
 
         Args:
@@ -81,12 +81,12 @@ class EliteCard(Card, Combatable, Magical):
         """
         return {
             "attacker": self.name,
-            "target": str(target),
+            "target": target,
             "damage": self.__attack_power,
             "type": "melee"
         }
 
-    def defend(self, incoming_damage: int) -> Dict[str, Any]:
+    def defend(self, incoming_damage: int) -> Dict[str, Union[str, int]]:
         """Uses defense_power to block incoming damage.
 
         Args:
@@ -95,6 +95,9 @@ class EliteCard(Card, Combatable, Magical):
         Returns:
             Dictionary showing damage absorbed by defense_power.
         """
+        if not isinstance(incoming_damage, int) or incoming_damage < 0:
+            raise ValueError("Attack power must be a non-negative integer")
+
         blocked = min(self.__defense_power, incoming_damage)
         self.__defense_power -= blocked
         taken = incoming_damage - blocked
@@ -106,7 +109,7 @@ class EliteCard(Card, Combatable, Magical):
             "remaining_defense": self.__defense_power
         }
 
-    def get_combat_stats(self) -> Dict[str, Any]:
+    def get_combat_stats(self) -> Dict[str, int]:
         """Returns combat related stats."""
         return {
             "attack": self.__attack_power,
@@ -114,8 +117,8 @@ class EliteCard(Card, Combatable, Magical):
         }
 
     def cast_spell(
-        self, spell_name: str, targets: List[Any]
-    ) -> Dict[str, Any]:
+        self, spell_name: str, targets: List[str]
+    ) -> Dict[str, str]:
         """Casts a spell from the card.
 
         Args:
@@ -128,11 +131,11 @@ class EliteCard(Card, Combatable, Magical):
         return {
             "caster": self.name,
             "spell": spell_name,
-            "targets": [str(t) for t in targets],
+            "targets": targets,
             "action": "magic_cast"
         }
 
-    def channel_mana(self, amount: int) -> Dict[str, Any]:
+    def channel_mana(self, amount: int) -> Dict[str, Union[str, int]]:
         """Increases defense_power (channeling).
 
         Args:
@@ -148,6 +151,6 @@ class EliteCard(Card, Combatable, Magical):
             "total_defense": self.__defense_power
         }
 
-    def get_magic_stats(self) -> Dict[str, Any]:
+    def get_magic_stats(self) -> Dict[str, int]:
         """Returns magic related stats."""
         return {"current_energy": self.__defense_power}

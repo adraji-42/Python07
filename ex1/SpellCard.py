@@ -1,5 +1,5 @@
 from ex0 import Card
-from typing import Any, Dict, List
+from typing import Dict, List, Union
 
 
 class SpellCard(Card):
@@ -22,7 +22,9 @@ class SpellCard(Card):
             raise ValueError("Effect type must be a non-empty string")
         self.__effect_type = value.strip().capitalize()
 
-    def play(self, game_state: Dict[str, Any]) -> Dict[str, Any]:
+    def play(
+        self, game_state: Dict[str, Union[str, int]]
+    ) -> Dict[str, Union[str, int]]:
         mana: int = game_state.get("mana", 0)
         effect: int = game_state.get("effect", "None")
         can_play: bool = self.is_playable(mana)
@@ -33,7 +35,9 @@ class SpellCard(Card):
             "effect": effect
         }
 
-    def resolve_effect(self, targets: List[str]) -> Dict[str, Any]:
+    def resolve_effect(
+        self, targets: List[str]
+    ) -> Dict[str, Union[str, int, bool]]:
         return {
             "effect": self.__effect_type,
             "targets": targets,
